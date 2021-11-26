@@ -10,6 +10,14 @@ from sqlalchemy.orm import sessionmaker, joinedload
 from utils import db_models
 from utils import load_data
 
+from fastapi.middleware.cors import CORSMiddleware
+origins = [
+    "http://localhost",
+    "http://localhost:8000",
+    "http://localhost:3000",
+]
+
+
 DATABASE_URL = "sqlite:///./data.sqlite"
 engine = sqlalchemy.create_engine(
     DATABASE_URL,
@@ -22,6 +30,14 @@ session = Session()
 db_models.Base.metadata.create_all(engine)
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.on_event("startup")
 async def startup():
@@ -44,21 +60,14 @@ async def root():
 @app.get("/plants/{plant_id}")
 async def get_plant(plant_id):
     if plant_id == "all":
-        plant = session.query(db_models.Plant).options(joinedload(db_models.Plant.pictures)).options(joinedload(db_models.Plant.lists)).all()
+        plant = session.query(db_models.Plant).options(joinedload(db_models.Plant.pictures)).all()
     else:
-        plant = session.query(db_models.Plant).options(joinedload(db_models.Plant.pictures)).options(joinedload(db_models.Plant.lists)).filter(db_models.Plant.id == plant_id).first()
+        plant = session.query(db_models.Plant).options(joinedload(db_models.Plant.pictures)).filter(db_models.Plant.id == plant_id).first()
     return plant
 
 # Add new plant
 @app.post("/plants")
-async def add_plant():
-    # TODO check if latinname exists
-    # TODO save pictures
-    # TODO insert plant with latin and hungarian name into database
-    pass
-
-@app.post("/uploadfiles")
-async def create_upload_files(latinName: str  = Form(...), hungarianName: str  = Form(...), files: List[UploadFile] = File(...)):
+async def add_plant(latinName: str  = Form(...), hungarianName: str  = Form(...), files: List[UploadFile] = File(...)):
     new_plant = session.query(db_models.Plant).filter(db_models.Plant.latin_name == latinName).first()
     if new_plant is not None:
         raise HTTPException(status_code=409, detail=f"{latinName} already exists!")
@@ -101,16 +110,24 @@ async def delete_plant(plant_id):
 @app.get("/lists/{list_id}")
 async def get_list(list_id):
     if list_id == "all":
-        list = session.query(db_models.TestList).all()
+        list = session.query(db_models.TestList).options(joinedload(db_models.TestList.plants)).all()
     else:
-        list = session.query(db_models.TestList).filter(db_models.TestList.id == list_id).first()
+        list = session.query(db_models.TestList).options(joinedload(db_models.TestList.plants)).filter(db_models.TestList.id == list_id).first()
     return list
 
 ### Create new list
-@app.post("/add_list")
-async def add_list():
-    # TODO save to database with selected plant_ids
-    pass
+@app.post("/lists")
+async def add_list(name: str  = Form(...), plants: str  = Form(...)):
+    new_list = session.query(db_models.TestList).filter(db_models.TestList.name == name).first()
+    if new_list is not None:
+        raise HTTPException(status_code=409, detail=f"{name} already exists!")
+    if plants is not None:
+        plantlist = session.query(db_models.Plant).filter(db_models.Plant.id.in_(plants.split(','))).all()
+        new_list = db_models.TestList(name=name, plants=plantlist)
+    else:
+        new_list = db_models.TestList(name=name)
+    session.add(new_list)
+    session.commit()
 
 ### Modify existing list
 @app.patch("/lists/{list_id}")
