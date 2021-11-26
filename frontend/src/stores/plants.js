@@ -6,7 +6,7 @@ export const plantData = writable({});
 
 export const fetchPlantData = async () => {
     if (loaded) return;
-    const url = 'http://192.168.88.247:8000/api/get_plants';
+    const url = import.meta.env.VITE_BACKEND_ADDRESS + '/plants/all';
     const res = await fetch(url);
     const data = await res.json();
     plantData.set(data);
