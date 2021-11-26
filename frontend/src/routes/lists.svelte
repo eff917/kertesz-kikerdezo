@@ -7,7 +7,6 @@
 	listsData.subscribe((values) => {
 		listsValue = values;
 	});
-
 	let selectedList = 'kaszab';
 	function loadList() {
 		// remainingPlants.set(listsValue[selectedList])
@@ -16,14 +15,10 @@
 	}
 </script>
 
-<!-- <h2>Listák</h2>
-{#each Object.keys(listsValue) as list }
-    <h4>{list}</h4>
-    {#each listsValue[list] as plant }
-        <p>{plant}</p>
-        
-    {/each}
-{/each} -->
+<h2 class="text-2xl text-center my-8 uppercase">Listák</h2>
+{#each listsValue as list }
+    <a class="block" href="/lists/{list.id}">{list.name}</a>
+{/each}
 
 <button
 	on:click={loadList}
