@@ -1,5 +1,5 @@
 <h2 class="text-4xl text-center my-8 uppercase">Új növény feltöltése</h2>
-<form class="text-center" action="{import.meta.env.VITE_BACKEND_ADDRESS}/plants" enctype="multipart/form-data" method="post">
+<form class="text-center" action="/api/plants" enctype="multipart/form-data" method="post">
     <label for="files">Képek</label>
     <input class="my-2 border-2 border-black rounded" name="files" type="file" multiple><br />
     <label for="latinName">Latin név</label>
@@ -10,7 +10,7 @@
 </form>
 
 <h2 class="text-4xl text-center my-8 uppercase">Új lista feltöltése</h2>
-<form class="text-center" action="{import.meta.env.VITE_BACKEND_ADDRESS}/lists" enctype="application/json" method="post">
+<form class="text-center" action="/api/lists" enctype="application/json" method="post">
     <label for="name">Lista neve</label>
     <input class="my-2 border-2 border-black rounded" name="name" type="text"><br />
     <label for="plants">Növények</label>
