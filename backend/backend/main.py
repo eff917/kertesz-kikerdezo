@@ -49,9 +49,6 @@ async def startup():
     )
     load_data.load_example_data(session)
     
-
-
-
 @app.on_event("shutdown")
 async def shutdown():
     engine.dispose()
@@ -82,7 +79,7 @@ async def add_plant(latinName: str  = Form(...), hungarianName: str  = Form(...)
         if file.filename != '':
             contents = await file.read()
             Path("static/images").mkdir(parents=True, exist_ok=True)
-            with open(f"/static/images/{file.filename}", "wb") as target:
+            with open(f"static/images/{file.filename}", "wb") as target:
                 target.write(contents)
             new_picture = db_models.Picture(path = f"/static/images/{file.filename}", plant_id = new_plant.id)
             session.add(new_picture)

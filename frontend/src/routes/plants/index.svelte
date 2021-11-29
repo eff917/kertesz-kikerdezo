@@ -10,8 +10,11 @@
 
 <h2 class="text-2xl text-center my-8 uppercase">Növények</h2>
 {#each plantsValue as plant}
-	<p>{plant.latin_name} - {plant.hungarian_name}</p>
+	<p class="text-xl text-center font-bold">{plant.latin_name}</p>
+	<p class="text-l text-center">{plant.hungarian_name}</p>
+	<div>
 	{#each plant.pictures as picture }
-	<img alt={picture.path} src={picture.path} />
+	<img alt={plant.latin_name} src={picture.path} />
 	{/each}
+	</div>
 {/each}
