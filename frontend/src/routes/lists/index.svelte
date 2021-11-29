@@ -1,6 +1,6 @@
 <script>
-	import { listsData, remainingPlants } from '../stores/lists';
-	import { plantList } from '../stores/plants';
+	import { listsData, remainingPlants } from '../../stores/lists';
+	import { plantList } from '../../stores/plants';
     import { goto } from '$app/navigation';
 
 	let listsValue;
