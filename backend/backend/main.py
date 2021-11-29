@@ -1,5 +1,6 @@
 from os import path, stat
 from fastapi import FastAPI, HTTPException, File, UploadFile, Form, Request
+from fastapi.responses import RedirectResponse
 from typing import List
 from pathlib import Path
 
@@ -28,6 +29,8 @@ engine = sqlalchemy.create_engine(
 Session = sessionmaker(engine)
 session = Session()
 db_models.Base.metadata.create_all(engine)
+
+main_app = FastAPI()
 
 app = FastAPI()
 
@@ -75,15 +78,16 @@ async def add_plant(latinName: str  = Form(...), hungarianName: str  = Form(...)
     session.add(new_plant)
     session.commit()
     for file in files:
-        contents = await file.read()
-        Path("static/images").mkdir(parents=True, exist_ok=True)
-        with open(f"static/images/{file.filename}", "wb") as target:
-            target.write(contents)
-        new_picture = db_models.Picture(path = f"static/images/{file.filename}", plant_id = new_plant.id)
-        session.add(new_picture)
-        session.commit()
+        if file.filename != '':
+            contents = await file.read()
+            Path("static/images").mkdir(parents=True, exist_ok=True)
+            with open(f"/static/images/{file.filename}", "wb") as target:
+                target.write(contents)
+            new_picture = db_models.Picture(path = f"/static/images/{file.filename}", plant_id = new_plant.id)
+            session.add(new_picture)
+            session.commit()
 
-    return new_plant
+    return RedirectResponse(f'/plants/{new_plant.id}')
 
 @app.patch("/plants/{plant_id}", response_class=db_models.Plant)
 async def update_plant(plant_id):
@@ -154,3 +158,4 @@ async def delete_list(list_id):
     else:
         raise HTTPException(status_code=404, detail=f"TestList with id {list_id} doesn't exist!")
     
+main_app.mount("/api", app)
