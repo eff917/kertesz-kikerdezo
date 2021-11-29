@@ -1,6 +1,7 @@
 from os import path, stat
 from fastapi import FastAPI, HTTPException, File, UploadFile, Form, Request
 from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from typing import List
 from pathlib import Path
 
@@ -159,3 +160,4 @@ async def delete_list(list_id):
         raise HTTPException(status_code=404, detail=f"TestList with id {list_id} doesn't exist!")
     
 main_app.mount("/api", app)
+main_app.mount("/static", StaticFiles(directory="static", check_dir=False), name="static")
