@@ -1,5 +1,5 @@
 <script>
-	import { listsData, remainingPlants } from '../../stores/lists';
+	import { listsData, remainingPlants, fetchListByID } from '../../stores/lists';
 	import { plantList } from '../../stores/plants';
     import { goto } from '$app/navigation';
 
@@ -7,21 +7,18 @@
 	listsData.subscribe((values) => {
 		listsValue = values;
 	});
-	let selectedList = 'kaszab';
-	function loadList() {
-		// remainingPlants.set(listsValue[selectedList])
-		remainingPlants.set([...$plantList]);
-        goto("/test")
+	let selectedList;
+	async function loadList(listID) {
+		let listToLoad = await fetchListByID(listID)
+		remainingPlants.set(listToLoad.plants);
+		goto("/test")
 	}
 </script>
 
 <h2 class="text-2xl text-center my-8 uppercase">Listák</h2>
 {#each listsValue as list }
-    <a class="block" href="/lists/{list.id}">{list.name}</a>
+    <a class="flex" href="/lists/{list.id}">{list.name}</a>
+	<button on:click={loadList(list.id)} class="flex bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+		A	 lista betöltése teszthez
+	</button>
 {/each}
-
-<button
-	on:click={loadList}
-	class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-	>Az összes növény betöltése teszthez</button
->

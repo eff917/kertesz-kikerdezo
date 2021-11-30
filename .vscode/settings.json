@@ -1,0 +1,12 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "kertesz-db",
+            "database": "${workspaceFolder:kertesz-kikerdezo}/backend/backend/data.sqlite",
+            "group": "test"
+        }
+    ],
+    "sqltools.useNodeRuntime": true
+}
