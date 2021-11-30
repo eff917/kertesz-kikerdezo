@@ -1,5 +1,5 @@
 <script context="module">
-	import { fetchPlantByID } from '../../stores/plants';
+	import { fetchPlantByID } from '$lib/stores/plants';
 
 	let listsValue;
 	export async function load(ctx) {

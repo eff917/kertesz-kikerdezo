@@ -1,5 +1,5 @@
 <script>
-	import { remainingPlants } from '../../stores/lists';
+	import { remainingPlants } from '$lib/stores/lists';
 	import { goto } from '$app/navigation';
 
 	let answerField;

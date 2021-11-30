@@ -1,5 +1,5 @@
 <script>
-	import { plantData } from '../../stores/plants';
+	import { plantData } from '$lib/stores/plants';
 
 	let plantsValue;
 	plantData.subscribe((values) => {

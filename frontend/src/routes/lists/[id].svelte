@@ -1,6 +1,6 @@
 <script context="module">
-	import { fetchListByID } from '../../stores/lists';
-	import { plantList } from '../../stores/plants';
+	import { fetchListByID } from '$lib/stores/lists';
+	import { plantList } from '$lib/stores/plants';
 
 	let listsValue;
 	export async function load(ctx) {
