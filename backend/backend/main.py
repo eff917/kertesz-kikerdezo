@@ -43,11 +43,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.on_event("startup")
-async def startup():
-    load_data.clear_all_tables(session
-    )
-    load_data.load_example_data(session)
+# @app.on_event("startup")
+# async def startup():
+    # load_data.clear_all_tables(session)
+    # load_data.load_example_data(session)
     
 @app.on_event("shutdown")
 async def shutdown():
@@ -119,17 +118,18 @@ async def get_list(list_id):
 
 ### Create new list
 @app.post("/lists")
-async def add_list(name: str  = Form(...), plants: str  = Form(...)):
+async def add_list(name: str  = Form(...), plants: List[int]  = Form(...)):
     new_list = session.query(db_models.TestList).filter(db_models.TestList.name == name).first()
     if new_list is not None:
         raise HTTPException(status_code=409, detail=f"{name} already exists!")
     if plants is not None:
-        plantlist = session.query(db_models.Plant).filter(db_models.Plant.id.in_(plants.split(','))).all()
+        plantlist = session.query(db_models.Plant).filter(db_models.Plant.id.in_(plants)).all()
         new_list = db_models.TestList(name=name, plants=plantlist)
     else:
         new_list = db_models.TestList(name=name)
     session.add(new_list)
     session.commit()
+    return RedirectResponse(f'/lists/{new_list.id}')
 
 ### Modify existing list
 @app.patch("/lists/{list_id}")
@@ -143,16 +143,17 @@ async def update_list(list_id, list):
             list_to_update.plants = update_data["plants"]
         session.commit()
     else:
-        raise HTTPException(status_code=404, detail=f"TestList with id {list_id} not found!")
+        raise HTTPException(status_code=404, detail=f"List with id {list_id} not found!")
 
 ### Delete list
 @app.delete("/lists/{list_id}")
 async def delete_list(list_id):
     list_to_delete = session.query(db_models.TestList).filter(db_models.TestList.id == list_id).first()
     if list_to_delete is not None:
+        listname = list_to_delete.name
         session.delete(list_to_delete)
         session.commit()
-        return f"TestList {list_id} deleted successfully."
+        return f"List '{listname}' deleted successfully."
     else:
         raise HTTPException(status_code=404, detail=f"TestList with id {list_id} doesn't exist!")
     

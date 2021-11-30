@@ -1,2 +1,2 @@
 run-dev:
-	cd backend && uvicorn main:main_app --reload
+	cd backend && ../.venv/bin/uvicorn main:main_app --reload
