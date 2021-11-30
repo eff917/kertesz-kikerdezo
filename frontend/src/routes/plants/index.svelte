@@ -3,7 +3,7 @@
 
 	let plantsValue;
 	plantData.subscribe((values) => {
-		plantsValue = values
+		plantsValue = values;
 	});
 </script>
 
@@ -12,8 +12,8 @@
 	<p class="text-xl text-center font-bold">{plant.latin_name}</p>
 	<p class="text-l text-center">{plant.hungarian_name}</p>
 	<div>
-	{#each plant.pictures as picture }
-	<img alt={plant.latin_name} src={picture.path} />
-	{/each}
+		{#each plant.pictures as picture}
+			<img alt={plant.latin_name} src={picture.path} />
+		{/each}
 	</div>
 {/each}
