@@ -27,7 +27,6 @@
             showHungarianName = true;
         }
     }
-    console.log($remainingPlants)
     
     function selectPlant(plantList) {
         return plantList[Math.floor(Math.random()*plantList.length)];
@@ -36,23 +35,22 @@
     function checkAnswer(answer) {
         
         if (answer == plant.latin_name) {
-            const index = $remainingPlants.indexOf(plant);
+            const index = remainingPlantsValue.indexOf(plant);
             console.log(index)
             answer='';
             answerField.value = '';
             if (index > -1) {
-                $remainingPlants.splice(index, 1);
-                $remainingPlants = $remainingPlants;
+                remainingPlantsValue.splice(index, 1);
+                remainingPlantsValue = remainingPlantsValue;
             }
-            plant = selectPlant($remainingPlants)
+            plant = selectPlant(remainingPlantsValue)
             showHungarianName = false;
             showLatinName = false;
-            console.log($remainingPlants)
             console.log(remainingPlantsValue)
         }
     };
 
-    let plant = selectPlant($remainingPlants);
+    let plant = selectPlant(remainingPlantsValue);
     console.log(plant)
 
 </script>
