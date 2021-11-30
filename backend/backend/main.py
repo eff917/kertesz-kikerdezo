@@ -9,8 +9,7 @@ import json
 
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker, joinedload
-from utils import db_models
-from utils import load_data
+import utils.db_models as db_models
 
 from fastapi.middleware.cors import CORSMiddleware
 origins = [
@@ -43,6 +42,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# import utils.load_data as load_data
 # @app.on_event("startup")
 # async def startup():
     # load_data.clear_all_tables(session)
